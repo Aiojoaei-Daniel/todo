@@ -7,7 +7,7 @@ import { FILTER_OPTION } from "../copy";
 
 const Form = () => {
   const dispatch = useDispatch();
-  const inputText = useRef("");
+  const inputText = useRef();
 
   const handleAddTodo = (event) => {
     event.preventDefault();
