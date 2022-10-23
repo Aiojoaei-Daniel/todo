@@ -1,35 +1,31 @@
-import React, { useState } from "react";
+import React, { useRef } from "react";
+import { useDispatch } from "react-redux";
 
+import { addTodos } from "../redux/todos";
+import { changeStatus } from "../redux/statusTodos";
 import { FILTER_OPTION } from "../copy";
 
-const Form = ({ setTodos, setStatusTodos }) => {
-  const [todo, setTodo] = useState("");
+const Form = () => {
+  const dispatch = useDispatch();
+  const inputText = useRef("");
 
   const handleAddTodo = (event) => {
     event.preventDefault();
-
+    const todo = inputText.current.value;
     if (todo) {
-      setTodos((prevTodos) => [
-        ...prevTodos,
-        { text: todo, completed: false, id: Math.floor(Math.random() * 1000) },
-      ]);
-
-      setTodo("");
+      dispatch(addTodos(todo));
+      inputText.current.value = "";
     }
   };
 
   const handleSetStatus = (event) => {
-    setStatusTodos(event.target.value);
+    const status = event.target.value;
+    dispatch(changeStatus(status));
   };
 
   return (
     <form onSubmit={handleAddTodo}>
-      <input
-        type="text"
-        className="todo-input"
-        onChange={(event) => setTodo(event.target.value)}
-        value={todo}
-      />
+      <input type="text" className="todo-input" ref={inputText} />
       <button className="todo-button" type="submit">
         <i className="fas fa-plus-square"></i>
       </button>

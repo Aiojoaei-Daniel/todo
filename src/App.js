@@ -3,13 +3,18 @@ import React, { useState, useEffect } from "react";
 import Form from "./components/Form";
 import TodoList from "./components/TodoList";
 
+import { useSelector, useDispatch } from "react-redux";
+import { changeTodos } from "./redux/todos";
+
 import { TITLE, TODOS_STATUS, COLLECTION_NAME } from "./copy";
 import "./App.css";
 
 function App() {
-  const [todos, setTodos] = useState([]);
-  const [statusTodos, setStatusTodos] = useState(TODOS_STATUS.ALL);
   const [filteredTodos, setFilteredTodos] = useState([]);
+
+  const { todos } = useSelector((state) => state.todos);
+  const { statusTodos } = useSelector((state) => state.statusTodos);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     getLocalTodos();
@@ -43,7 +48,7 @@ function App() {
       localStorage.setItem(COLLECTION_NAME, JSON.stringify([]));
     } else {
       let localTodos = JSON.parse(localStorage.getItem(COLLECTION_NAME));
-      setTodos((oldVal) => [...oldVal, ...localTodos]); // !!
+      dispatch(changeTodos(localTodos));
     }
   };
 
@@ -52,12 +57,8 @@ function App() {
       <header>
         <h1>{TITLE}</h1>
       </header>
-      <Form setTodos={setTodos} setStatusTodos={setStatusTodos} />
-      <TodoList
-        todos={todos}
-        setTodos={setTodos}
-        filteredTodos={filteredTodos}
-      />
+      <Form />
+      <TodoList filteredTodos={filteredTodos} />
     </div>
   );
 }

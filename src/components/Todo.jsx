@@ -1,21 +1,26 @@
 import React from "react";
+import { useDispatch, useSelector } from "react-redux";
 
-const Todo = ({ setTodos, todo, todos }) => {
+import { changeTodos } from "../redux/todos";
+
+const Todo = ({ todo }) => {
+  const { todos } = useSelector((state) => state.todos);
+  const dispatch = useDispatch();
+
   const handleCompleteTodo = () => {
-    setTodos(
-      todos.map((oldTodo) => {
-        if (oldTodo.id === todo.id) {
-          return { ...oldTodo, completed: !oldTodo.completed };
-        } else {
-          return oldTodo;
-        }
-      })
-    );
+    const completeTodo = todos.map((oldTodo) => {
+      if (oldTodo.id === todo.id) {
+        return { ...oldTodo, completed: !oldTodo.completed };
+      } else {
+        return oldTodo;
+      }
+    });
+    dispatch(changeTodos(completeTodo));
   };
 
   const handleRemoveTodo = () => {
-    const newTodos = todos.filter((oldTodo) => oldTodo.id !== todo.id);
-    setTodos(newTodos);
+    const remainingTodos = todos.filter((oldTodo) => oldTodo.id !== todo.id);
+    dispatch(changeTodos(remainingTodos));
   };
 
   return (
